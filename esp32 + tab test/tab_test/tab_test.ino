@@ -4,6 +4,14 @@
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>
 
+#include "DHT.h"
+//here we use 14 of ESP32 to read data
+#define DHTPIN 14
+//our sensor is DHT11 type
+#define DHTTYPE DHT11
+//create an instance of DHT sensor
+DHT dht(DHTPIN, DHTTYPE);
+
 //ifttt
 #define IFTTT_Host "maker.ifttt.com"
 #define IFTTT_KEY "b1tS_dzyDEabsKWtS4woTJ"
@@ -19,6 +27,13 @@
 // How many NeoPixels are attached to the Arduino?
 #define NUMPIXELS      19
 
+#define button1 39
+
+int flag=0;
+
+float h =0,t=0;
+
+
 // When we setup the NeoPixel library, we tell it how many pixels, and which pin to use to send signals.
 // Note that for older NeoPixel strips you might need to change the third parameter--see the strandtest
 // example for more information on possible values.
@@ -27,6 +42,11 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ80
 int delayval = 50; // delay for half a second
 
 void setup() {
+
+  dht.begin();
+
+  pinMode(button1, INPUT);
+  
   Serial.begin(115200);
 
    WiFiManager wifiManager;
@@ -41,7 +61,7 @@ void setup() {
 #endif
   // End of trinket special code
 
-  send_event("luna_pot_temp");  
+  //send_event("luna_pot_temp");  
 
   pixels.begin(); // This initializes the NeoPixel library.
 

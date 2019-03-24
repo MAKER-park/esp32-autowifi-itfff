@@ -12,7 +12,7 @@ void led(int n, int g, int r, int b){
   
 }
 
-void send_event(const char *event){
+void send_event(const char *event,int temp,int hum,int soil){
   Serial.print("Connecting to ");
   Serial.println(IFTTT_Host);
   
@@ -28,7 +28,7 @@ void send_event(const char *event){
   url += "/with/key/";
   url += IFTTT_KEY;
   
-  String mJson = String("{\"value1\":\"") +"10\"}";
+  String mJson = String("{\"value1\":\"") +temp+"\"}";
   
   Serial.print("Requesting URL: ");
   Serial.println(url);
@@ -54,10 +54,47 @@ void send_event(const char *event){
   client.stop();
 }
 
+void dht_save(){
+  //use the functions which are supplied by library.
+h = dht.readHumidity();
+// Read temperature as Celsius (the default)
+t = dht.readTemperature();
+// Check if any reads failed and exit early (to try again).
+if (isnan(h) || isnan(t)) {
+Serial.println("Failed to read from DHT sensor!");
+return;
+}
+// print the result to Terminal
+Serial.print("Humidity: ");
+Serial.print(h);
+Serial.print(" %\t");
+Serial.print("Temperature: ");
+Serial.print(t);
+Serial.println(" *C ");
+//we delay a little bit for next read
+delay(100);
+}
+
 
 void loop() {
-  led(22,0,0,0);
+/*  
+#define button1 39
+*/
+// temp button 39!
+int s =20;
+if(digitalRead(button1) == LOW){
+  if(flag==0){
+    flag=1;
+    dht_save();
+    send_event("luna_pot",t,h,s);
+  }
+}
+else{
+  flag=0;
+}
+
+  /*led(22,0,0,0);
   delay(1000);
   led(5,0,0,100);//number, g,r,b
-  delay(1000);
+  delay(1000);*/
 }
