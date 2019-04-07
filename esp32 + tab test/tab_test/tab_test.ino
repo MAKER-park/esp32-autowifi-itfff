@@ -3,6 +3,8 @@
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>
+#include "IFTTTWebhook.h"
+
 
 #include "DHT.h"
 //here we use 14 of ESP32 to read data
@@ -12,9 +14,12 @@
 //create an instance of DHT sensor
 DHT dht(DHTPIN, DHTTYPE);
 
-//ifttt
+/*2019-04-07 이전것
 #define IFTTT_Host "maker.ifttt.com"
 #define IFTTT_KEY "b1tS_dzyDEabsKWtS4woTJ"
+*/
+#define IFTTT_API_KEY "b1tS_dzyDEabsKWtS4woTJ"
+#define IFTTT_EVENT_NAME "luna_pot"
 
 #ifdef __AVR__
   #include <avr/power.h>
@@ -56,6 +61,15 @@ void setup() {
 
    Serial.println("connected...yeey :)");
     // This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
+
+    /*2019-04-07 new lib webhook
+    IFTTTWebhook wh(IFTTT_API_KEY, IFTTT_EVENT_NAME);
+    wh.trigger();
+    wh.trigger("1");
+    wh.trigger("1", "2");
+    wh.trigger("1", "2", "3");
+    */
+    
 #if defined (__AVR_ATtiny85__)
   if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
 #endif

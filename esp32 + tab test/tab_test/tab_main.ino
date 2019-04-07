@@ -11,7 +11,7 @@ void led(int n, int g, int r, int b){
   }
   
 }
-
+/*
 void send_event(const char *event,int temp,int hum,int soil){
   Serial.print("Connecting to ");
   Serial.println(IFTTT_Host);
@@ -52,7 +52,22 @@ void send_event(const char *event,int temp,int hum,int soil){
   Serial.println();
   Serial.println("closing connection");
   client.stop();
+}*/
+
+void send_event(float temp,float hum,int soil){
+  char t[8];
+  char h[8];
+  char s[8];
+  sprintf(t,"%.2f",temp);
+  sprintf(h,"%.2f",hum);
+  sprintf(s,"%d",soil);
+  Serial.println(t);
+  Serial.println(h);
+  Serial.println(s);
+  IFTTTWebhook wh(IFTTT_API_KEY, IFTTT_EVENT_NAME);
+  wh.trigger(t,h,s);
 }
+
 
 void dht_save(){
   //use the functions which are supplied by library.
@@ -86,7 +101,7 @@ if(digitalRead(button1) == LOW){
   if(flag==0){
     flag=1;
     dht_save();
-    send_event("luna_pot",t,h,s);
+    send_event(t,h,s);
   }
 }
 else{
