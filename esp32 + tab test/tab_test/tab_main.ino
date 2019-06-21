@@ -96,7 +96,9 @@ void loop() {
 #define button1 39
 */
 // temp button 39!
-int s =20;
+int s = map(analogRead(ADC_PIN), 0, 4096, 100, 0);
+int pir = digitalRead(PIR_PIN);
+
 if(digitalRead(button1) == LOW){
   if(flag==0){
     flag=1;
@@ -108,6 +110,19 @@ else{
   flag=0;
 }
 
+if( pir == HIGH){
+  led(map(t,0,45,0,8),20,0,0);
+  delay(1000);
+  led(8,0,0,0);
+  led(map(s,0,100,0,8),0,20,0);
+  delay(1000);
+  led(8,0,0,0);
+  led(map(h,0,100,0,8),0,0,20);
+  delay(1000);
+}
+if( pir == LOW){
+  led(8,0,0,0);
+}
   /*led(22,0,0,0);
   delay(1000);
   led(5,0,0,100);//number, g,r,b

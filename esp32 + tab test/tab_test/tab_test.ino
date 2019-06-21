@@ -5,10 +5,12 @@
 #include <WiFiManager.h>
 #include "IFTTTWebhook.h"
 
+#define ADC_PIN         32 //soil
+#define PIR_PIN         21 //PIR
 
 #include "DHT.h"
 //here we use 14 of ESP32 to read data
-#define DHTPIN 14
+#define DHTPIN 22
 //our sensor is DHT11 type
 #define DHTTYPE DHT11
 //create an instance of DHT sensor
@@ -27,10 +29,10 @@ DHT dht(DHTPIN, DHTTYPE);
 
 // Which pin on the Arduino is connected to the NeoPixels?
 // On a Trinket or Gemma we suggest changing this to 1
-#define PIN            22
+#define PIN            23
 
 // How many NeoPixels are attached to the Arduino?
-#define NUMPIXELS      19
+#define NUMPIXELS      8
 
 #define button1 39
 
@@ -49,6 +51,8 @@ int delayval = 50; // delay for half a second
 void setup() {
 
   dht.begin();
+
+  pinMode(PIR_PIN, INPUT);
 
   pinMode(button1, INPUT);
   
@@ -78,16 +82,6 @@ void setup() {
   //send_event("luna_pot_temp");  
 
   pixels.begin(); // This initializes the NeoPixel library.
-
-  for(int i=0;i<NUMPIXELS;i++){
-
-    // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
-    pixels.setPixelColor(i, pixels.Color(0,100,0)); // Moderately bright green color.
-
-    pixels.show(); // This sends the updated pixel color to the hardware.
-
-    delay(delayval); // Delay for a period of time (in milliseconds).
-
-  }
+  pixels.show();
 
 }
