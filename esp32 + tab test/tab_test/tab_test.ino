@@ -5,8 +5,12 @@
 #include <WiFiManager.h>
 #include "IFTTTWebhook.h"
 
+#include <HTTPClient.h>
+#include <string.h> 
+
 #define ADC_PIN         32 //soil
 #define PIR_PIN         21 //PIR
+#define SERVERIP        "192.168.35.93"//ip주소 나중에 외부 ip로 바꿀것
 
 #include "DHT.h"
 //here we use 14 of ESP32 to read data

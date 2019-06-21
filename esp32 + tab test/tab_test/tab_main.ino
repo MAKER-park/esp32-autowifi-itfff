@@ -66,6 +66,29 @@ void send_event(float temp,float hum,int soil){
   Serial.println(s);
   IFTTTWebhook wh(IFTTT_API_KEY, IFTTT_EVENT_NAME);
   wh.trigger(t,h,s);
+
+  //mysql
+    HTTPClient http;
+
+    String endWeb ="http://192.168.35.93/lunapot_db_test1.php?temp=";//주소 나중에 바꿀것!
+    endWeb += String(t);
+    endWeb += "&soil=";
+    endWeb += String(s);
+    endWeb += "&hum=";
+    endWeb += String(h);
+ 
+    http.begin(endWeb);        // 서버 주소 
+    Serial.println(endWeb);
+    int httpCode = http.GET(); 
+
+    if(httpCode>0){
+        String payload = http.getString();
+        Serial.println(payload);
+    }else{
+        Serial.println("Error on HTTP request");
+    }
+    http.end(); 
+    delay(5000);
 }
 
 
@@ -99,16 +122,11 @@ void loop() {
 int s = map(analogRead(ADC_PIN), 0, 4096, 100, 0);
 int pir = digitalRead(PIR_PIN);
 
-if(digitalRead(button1) == LOW){
-  if(flag==0){
-    flag=1;
     dht_save();
-    send_event(t,h,s);
-  }
-}
-else{
-  flag=0;
-}
+    send_event(t,h,s);//ifttt+mysql data 추가
+
+
+
 
 if( pir == HIGH){
   led(map(t,0,45,0,8),20,0,0);
