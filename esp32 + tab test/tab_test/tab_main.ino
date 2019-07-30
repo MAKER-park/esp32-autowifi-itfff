@@ -14,11 +14,11 @@ void send_event(float temp, float hum, int soil) {
   //mysql
   HTTPClient http;
 
-  String endWeb = "http://192.168.35.93/lunapot_db_test1.php?temp="; //주소 나중에 바꿀것!
+  String endWeb = "http://110.15.108.4/lunapot_db_test1.php?temperature="; //주소 나중에 바꿀것!
   endWeb += String(t);
   endWeb += "&soil=";
   endWeb += String(s);
-  endWeb += "&hum=";
+  endWeb += "&humidity=";
   endWeb += String(h);
 
   http.begin(endWeb);        
@@ -68,12 +68,15 @@ void loop() {
  
 
   dht_save();
-  if(count>=10){
+  if(count>=60){
    send_event(t, h, s); //ifttt+mysql data 추가 
   }
   //Serial.println(pir);
   if ( pir == HIGH) {
-    pir_led();
+    if(pir_count>10){
+               pir_led(); 
+               pir_count=0;
+    }
   }
 
 }
